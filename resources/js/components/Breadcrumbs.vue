@@ -7,7 +7,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from '@codinglabsau/gooey';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
 type Props = {

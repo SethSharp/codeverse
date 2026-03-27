@@ -2,9 +2,7 @@
 import { Form, Head } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import { Button, Label, Spinner } from '@codinglabsau/gooey';
 import { store } from '@/routes/password/confirm';
 
 defineOptions({
