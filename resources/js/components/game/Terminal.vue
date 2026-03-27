@@ -2,7 +2,7 @@
 import { nextTick, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
-import { Button, Input } from '@codinglabsau/gooey';
+import { Button } from '@codinglabsau/gooey';
 import StoreActionController from '@/actions/App/Http/Controllers/Game/StoreActionController';
 import AskAiQuestionController from '@/actions/App/Http/Controllers/Game/AskAiQuestionController';
 import IndexGameController from '@/actions/App/Http/Controllers/Game/IndexGameController';
