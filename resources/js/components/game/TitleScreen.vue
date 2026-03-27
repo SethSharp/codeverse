@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { Button, Input } from '@codinglabsau/gooey';
-import { start } from '@/actions/App/Http/Controllers/GameController';
+import StartController from '@/actions/App/Http/Controllers/Game/StartController';
+import { useLoadingDots } from '@/composables/useLoadingDots';
 
 const emit = defineEmits<{
     start: [data: Record<string, unknown>];
@@ -11,6 +12,7 @@ const emit = defineEmits<{
 const playerName = ref('');
 const loading = ref(false);
 const error = ref('');
+const loadingText = useLoadingDots(loading, 'INITIALISING');
 
 const startGame = async () => {
     if (!playerName.value.trim()) {
@@ -22,7 +24,7 @@ const startGame = async () => {
     error.value = '';
 
     try {
-        const { data } = await axios.post(start.url(), {
+        const { data } = await axios.post(StartController.url(), {
             player_name: playerName.value.trim(),
         });
 
@@ -76,7 +78,7 @@ const startGame = async () => {
                     :disabled="loading"
                     @click="startGame"
                 >
-                    {{ loading ? 'INITIALISING...' : 'LAUNCH MISSION' }}
+                    {{ loading ? loadingText : 'LAUNCH MISSION' }}
                 </Button>
             </div>
 
