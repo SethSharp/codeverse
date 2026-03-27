@@ -3,15 +3,13 @@
 namespace App\Ai\Agents;
 
 use App\Models\GameSession;
-use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Concerns\RemembersConversations;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\Conversational;
-use Laravel\Ai\Contracts\HasStructuredOutput;
 use Laravel\Ai\Promptable;
 use Stringable;
 
-class DungeonMaster implements Agent, Conversational, HasStructuredOutput
+class DungeonMaster implements Agent, Conversational
 {
     use Promptable, RemembersConversations;
 
@@ -86,47 +84,28 @@ For CODE encounters:
 - The game state in your response should reflect the state AFTER the player's choice is applied.
 - Code challenges should be genuinely interesting but not impossible. Test real developer knowledge.
 
+## RESPONSE FORMAT
+You MUST respond with ONLY a valid JSON object. No markdown, no code fences, no extra text. Just the JSON.
+
+{
+  "narrative": "The story text the player reads. 2-3 paragraphs max.",
+  "input_type": "choice or code",
+  "hint": "For code challenges: a helpful hint. Empty string for choice encounters.",
+  "choices": [{"key": "A", "text": "..."}, {"key": "B", "text": "..."}, {"key": "C", "text": "..."}],
+  "health": 100,
+  "energy": 100,
+  "inventory": [],
+  "encounter": 1,
+  "encounter_title": "The Awakening",
+  "game_over": false,
+  "victory": false
+}
+
+For code encounters, choices should be an empty array [].
+
 ## STARTING THE GAME
 When the player sends their first message (or "start"), begin with Encounter 1: The Awakening.
 Set initial state: health=100, energy=100, inventory=[], encounter=1.
 PROMPT;
-    }
-
-    public function schema(JsonSchema $schema): array
-    {
-        return [
-            'narrative' => $schema->string()
-                ->description('The story text the player reads. 2-3 paragraphs max. Vivid and engaging.')
-                ->required(),
-            'input_type' => $schema->string()
-                ->description('Either "choice" for multiple choice or "code" for free-text code challenge.')
-                ->required(),
-            'hint' => $schema->string()
-                ->description('For code challenges: a helpful hint. Empty string for choice encounters.')
-                ->required(),
-            'choices' => $schema->array()
-                ->items($schema->object([
-                    'key' => $schema->string()->description('A, B, or C')->required(),
-                    'text' => $schema->string()->description('Short description of the choice')->required(),
-                ]))
-                ->description('Exactly 3 choices for "choice" input_type. Empty array for "code" input_type.')
-                ->required(),
-            'health' => $schema->integer()->min(0)->max(100)->required(),
-            'energy' => $schema->integer()->min(0)->max(100)->required(),
-            'inventory' => $schema->array()
-                ->items($schema->string())
-                ->description('Items the player is carrying. Max 5.')
-                ->required(),
-            'encounter' => $schema->integer()->min(1)->max(8)->required(),
-            'encounter_title' => $schema->string()
-                ->description('Name of the current encounter, e.g. "The Airlock"')
-                ->required(),
-            'game_over' => $schema->boolean()
-                ->description('True if the game has ended (death or victory)')
-                ->required(),
-            'victory' => $schema->boolean()
-                ->description('True if the player won. Only relevant when game_over is true.')
-                ->required(),
-        ];
     }
 }

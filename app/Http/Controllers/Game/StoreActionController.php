@@ -22,50 +22,26 @@ class StoreActionController extends Controller
             return response()->json(['error' => 'Game is already over.'], 422);
         }
 
-        $action = $request->answer
+        $prompt = $request->answer
             ? "My answer: {$request->answer}"
             : "I choose: [{$request->choice}] {$request->choice_text}";
-
-        $inventory = implode(', ', $gameSession->inventory ?? []) ?: 'none';
-
-        $prompt = <<<PROMPT
-        CURRENT GAME STATE:
-        - Encounter: {$gameSession->current_encounter}/8
-        - Health: {$gameSession->health}/100
-        - Energy: {$gameSession->energy}/100
-        - Inventory: {$inventory}
-
-        PLAYER ACTION: {$action}
-
-        Continue the game from encounter {$gameSession->current_encounter}. Advance to the NEXT encounter ({$gameSession->current_encounter} + 1). Do not repeat the current encounter.
-        PROMPT;
 
         $agent = new DungeonMaster($gameSession);
         $response = $agent
             ->continue($gameSession->conversation_id, as: $gameSession)
             ->prompt($prompt);
 
+        $data = StartGameController::parseResponse((string) $response);
+
         $gameSession->update([
-            'health' => $response['health'],
-            'energy' => $response['energy'],
-            'inventory' => $response['inventory'],
-            'current_encounter' => $response['encounter'],
-            'game_over' => $response['game_over'],
-            'victory' => $response['victory'],
+            'health' => $data['health'],
+            'energy' => $data['energy'],
+            'inventory' => $data['inventory'],
+            'current_encounter' => $data['encounter'],
+            'game_over' => $data['game_over'],
+            'victory' => $data['victory'],
         ]);
 
-        return response()->json([
-            'narrative' => $response['narrative'],
-            'input_type' => $response['input_type'],
-            'hint' => $response['hint'],
-            'choices' => $response['choices'],
-            'health' => $response['health'],
-            'energy' => $response['energy'],
-            'inventory' => $response['inventory'],
-            'encounter' => $response['encounter'],
-            'encounter_title' => $response['encounter_title'],
-            'game_over' => $response['game_over'],
-            'victory' => $response['victory'],
-        ]);
+        return response()->json($data);
     }
 }
