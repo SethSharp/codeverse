@@ -7,7 +7,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
+} from '@codinglabsau/gooey';
 import { home } from '@/routes';
 
 defineProps<{

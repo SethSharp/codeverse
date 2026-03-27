@@ -5,8 +5,8 @@ import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileCo
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
-import { Button } from '@/components/ui/button';
 import {
+    Button,
     Dialog,
     DialogClose,
     DialogContent,
@@ -15,8 +15,8 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+    Label,
+} from '@codinglabsau/gooey';
 
 const passwordInput = useTemplateRef('passwordInput');
 </script>

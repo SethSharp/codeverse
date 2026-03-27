@@ -33,6 +33,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Authenticate GitHub Packages
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PACKAGES_TOKEN }}" >> .npmrc
+
       - name: Install Node Dependencies
         run: npm i
 
