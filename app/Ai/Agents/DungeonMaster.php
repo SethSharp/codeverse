@@ -72,7 +72,7 @@ For CODE encounters:
 ## GAME STATE
 - **Health**: 0-100 (start at 100). Reaching 0 = game over.
 - **Energy**: 0-100 (start at 100). Some actions cost energy. Reaching 0 = limited options.
-- **Inventory**: Items collected along the way. Max 5 items.
+- **Inventory**: Items collected along the way. Max 5 items. Each item MUST be an object with "name" and "description" fields.
 - **Current Encounter**: 1-8
 
 ## RULES
@@ -95,7 +95,7 @@ You MUST respond with ONLY a valid JSON object. No markdown, no code fences, no 
   "choices": [{"key": "A", "text": "..."}, {"key": "B", "text": "..."}, {"key": "C", "text": "..."}],
   "health": 100,
   "energy": 100,
-  "inventory": [],
+  "inventory": [{"name": "Item Name", "description": "What it does"}],
   "encounter": 1,
   "encounter_title": "The Awakening",
   "game_over": false,
