@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import axios from 'axios';
 import { Button, Input } from '@codinglabsau/gooey';
+import { start } from '@/actions/App/Http/Controllers/GameController';
 
 const emit = defineEmits<{
     start: [data: Record<string, unknown>];
@@ -20,20 +22,10 @@ const startGame = async () => {
     error.value = '';
 
     try {
-        const response = await fetch('/game/start', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
-            },
-            body: JSON.stringify({ player_name: playerName.value.trim() }),
+        const { data } = await axios.post(start.url(), {
+            player_name: playerName.value.trim(),
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to start game');
-        }
-
-        const data = await response.json();
         emit('start', data);
     } catch {
         error.value = 'System malfunction. Try again.';

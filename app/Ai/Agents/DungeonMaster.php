@@ -37,20 +37,38 @@ The player is a developer who has been pulled into the Codeverse — the digital
 The game has exactly 8 encounters. Track which encounter the player is on (1-8).
 
 ### Encounters:
-1. **The Awakening** — Player wakes in a crashed escape pod. Tutorial encounter. Simple choice to establish tone.
-2. **The Airlock** — A broken airlock needs fixing. Code puzzle or logic choice.
-3. **The Server Room** — Overheating servers. Must make a resource allocation decision under time pressure.
-4. **The Recursive Corridor** — An infinite hallway (recursion joke). Must find the base case to escape.
-5. **The Null Void** — A room where things literally don't exist. Navigate through null references.
-6. **The Firewall** — A security checkpoint. Talk your way past or find an exploit.
-7. **The Stack Overflow** — The station's memory is literally overflowing. Physical/puzzle challenge.
-8. **The Core Reactor** — Final encounter. Reboot the station. The big choice that determines the ending.
+1. **The Awakening** — Player wakes in a crashed escape pod. Tutorial encounter. Simple multiple choice.
+2. **The Airlock** — A broken airlock needs fixing. CODE CHALLENGE: player must type a code answer (e.g. write a regex, name a function, fix a bug).
+3. **The Server Room** — Overheating servers. Multiple choice — resource allocation under pressure.
+4. **The Recursive Corridor** — An infinite hallway. CODE CHALLENGE: player must identify the base case or fix a recursive function.
+5. **The Null Void** — A room where things don't exist. Multiple choice — navigate null references.
+6. **The Firewall** — A security checkpoint. CODE CHALLENGE: player must write/identify code to bypass it (SQL injection, auth bypass, etc).
+7. **The Stack Overflow** — Memory overflowing. Multiple choice — physical/puzzle challenge.
+8. **The Core Reactor** — Final encounter. CODE CHALLENGE: the big reboot requires writing or fixing actual code.
+
+## INPUT TYPES
+Each encounter uses one of two input types:
+- **"choice"** — Player picks A, B, or C. Provide exactly 3 choices.
+- **"code"** — Player types a free-text answer (code snippet, concept name, or technical answer). Provide a hint and the expected answer concept in the choices array (but the player types their own answer).
+
+For CODE CHALLENGE encounters:
+- Set input_type to "code"
+- Set the "hint" field to a helpful clue (e.g. "Think about what stops infinite recursion...")
+- The choices array should be EMPTY (player types their answer)
+- When the player submits their answer, evaluate it generously — accept any reasonable variation. Exact syntax doesn't matter, the concept does.
+- If wrong: lose health/energy, give feedback, and let them try again OR move on with a penalty.
+- If right: reward with health/energy/items and great narrative.
 
 ## ENCOUNTER FORMAT
-For each encounter, provide:
-1. A narrative description of what the player sees/experiences
-2. Exactly 3 choices (labelled A, B, C) — each should feel meaningfully different
-3. One choice should be clearly "code-smart" (rewards programming knowledge), one should be "bold/creative", and one should be "cautious/safe"
+For CHOICE encounters:
+1. A narrative description
+2. Exactly 3 choices (labelled A, B, C)
+3. One choice should be "code-smart", one "bold/creative", one "cautious/safe"
+
+For CODE encounters:
+1. A narrative description presenting the code challenge
+2. A hint to help the player
+3. Empty choices array
 
 ## GAME STATE
 - **Health**: 0-100 (start at 100). Reaching 0 = game over.
@@ -66,6 +84,7 @@ For each encounter, provide:
 - After encounter 8, narrate an ending based on remaining health, energy, and choices made.
 - Each response MUST advance the game — no stalling or asking for clarification.
 - The game state in your response should reflect the state AFTER the player's choice is applied.
+- Code challenges should be genuinely interesting but not impossible. Test real developer knowledge.
 
 ## STARTING THE GAME
 When the player sends their first message (or "start"), begin with Encounter 1: The Awakening.
@@ -79,17 +98,23 @@ PROMPT;
             'narrative' => $schema->string()
                 ->description('The story text the player reads. 2-3 paragraphs max. Vivid and engaging.')
                 ->required(),
-            'choices' => $schema->array(
-                items: $schema->object(properties: [
+            'input_type' => $schema->string()
+                ->description('Either "choice" for multiple choice or "code" for free-text code challenge.')
+                ->required(),
+            'hint' => $schema->string()
+                ->description('For code challenges: a helpful hint. Empty string for choice encounters.')
+                ->required(),
+            'choices' => $schema->array()
+                ->items($schema->object([
                     'key' => $schema->string()->description('A, B, or C')->required(),
                     'text' => $schema->string()->description('Short description of the choice')->required(),
-                ])
-            )
-                ->description('Exactly 3 choices. Empty array if game is over.')
+                ]))
+                ->description('Exactly 3 choices for "choice" input_type. Empty array for "code" input_type.')
                 ->required(),
             'health' => $schema->integer()->min(0)->max(100)->required(),
             'energy' => $schema->integer()->min(0)->max(100)->required(),
-            'inventory' => $schema->array(items: $schema->string())
+            'inventory' => $schema->array()
+                ->items($schema->string())
                 ->description('Items the player is carrying. Max 5.')
                 ->required(),
             'encounter' => $schema->integer()->min(1)->max(8)->required(),
