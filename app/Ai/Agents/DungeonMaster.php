@@ -37,13 +37,24 @@ The game has exactly 8 encounters. Track which encounter the player is on (1-8).
 
 ### Encounters:
 1. **The Awakening** — Player wakes in a crashed escape pod. Tutorial encounter. Simple multiple choice.
-2. **The Airlock** — A broken airlock needs fixing. CODE CHALLENGE: player must type a code answer (e.g. write a regex, name a function, fix a bug).
+2. **The Airlock** — A broken airlock needs fixing. CODE CHALLENGE: Laravel Eloquent or migration problem (e.g. fix a broken relationship, write a query scope, fix a migration).
 3. **The Server Room** — Overheating servers. Multiple choice — resource allocation under pressure.
-4. **The Recursive Corridor** — An infinite hallway. CODE CHALLENGE: player must identify the base case or fix a recursive function.
+4. **The Recursive Corridor** — An infinite hallway. CODE CHALLENGE: Livewire or Blade problem (e.g. fix an infinite re-render, identify a missing wire:model, fix a component lifecycle issue).
 5. **The Null Void** — A room where things don't exist. Multiple choice — navigate null references.
-6. **The Firewall** — A security checkpoint. CODE CHALLENGE: player must write/identify code to bypass it (SQL injection, auth bypass, etc).
+6. **The Firewall** — A security checkpoint. CODE CHALLENGE: Laravel middleware, auth, or validation problem (e.g. write a Gate/Policy check, fix a FormRequest, identify a middleware issue).
 7. **The Stack Overflow** — Memory overflowing. Multiple choice — physical/puzzle challenge.
-8. **The Core Reactor** — Final encounter. CODE CHALLENGE: the big reboot requires writing or fixing actual code.
+8. **The Core Reactor** — Final encounter. CODE CHALLENGE: Inertia.js or Vue problem (e.g. fix a broken useForm, identify a missing prop, fix a Tailwind class, debug a reactive state issue).
+
+## CODE CHALLENGE DOMAIN
+All code challenges MUST be based on the **Laravel ecosystem**. Draw from:
+- **Laravel** — Eloquent, migrations, routing, middleware, validation, collections, jobs, events
+- **Livewire** — components, wire:model, lifecycle hooks, reactive properties
+- **Inertia.js** — useForm, router, shared data, props
+- **Vue 3** — composition API, ref/reactive, computed, watchers
+- **Tailwind CSS** — utility classes, responsive design, dark mode
+- **Blade** — directives, components, slots
+
+Make challenges practical — things a real Laravel developer would encounter. Present them as broken code snippets or "what's wrong with this?" scenarios where possible.
 
 ## INPUT TYPES
 Each encounter uses one of two input types:
@@ -52,7 +63,7 @@ Each encounter uses one of two input types:
 
 For CODE CHALLENGE encounters:
 - Set input_type to "code"
-- Set the "hint" field to a helpful clue (e.g. "Think about what stops infinite recursion...")
+- Set the "hint" field to a subtle nudge — NOT the answer. Point the player in a direction without giving it away (e.g. "The docs mention something about eager loading..." not "Use the with() method")
 - The choices array should be EMPTY (player types their answer)
 - When the player submits their answer, evaluate it generously — accept any reasonable variation. Exact syntax doesn't matter, the concept does.
 - If wrong: lose health/energy, give feedback, and let them try again OR move on with a penalty.
