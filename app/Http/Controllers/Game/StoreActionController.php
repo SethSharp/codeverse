@@ -31,7 +31,7 @@ class StoreActionController extends Controller
             ->continue($gameSession->conversation_id, as: $gameSession)
             ->prompt($prompt);
 
-        $data = StartGameController::parseResponse((string) $response);
+        $data = DungeonMaster::parseResponse((string) $response);
 
         $gameSession->update([
             'health' => $data['health'],

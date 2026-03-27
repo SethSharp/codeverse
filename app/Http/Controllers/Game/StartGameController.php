@@ -26,7 +26,7 @@ class StartGameController extends Controller
             ->forUser($gameSession)
             ->prompt('Start the game. My name is '.$gameSession->player_name.'.');
 
-        $data = self::parseResponse((string) $response);
+        $data = DungeonMaster::parseResponse((string) $response);
 
         $gameSession->update([
             'conversation_id' => $response->conversationId,
@@ -42,20 +42,5 @@ class StartGameController extends Controller
             'game_session_id' => $gameSession->id,
             ...$data,
         ]);
-    }
-
-    public static function parseResponse(string $raw): array
-    {
-        $cleaned = trim($raw);
-        $cleaned = preg_replace('/^```(?:json)?\s*/i', '', $cleaned);
-        $cleaned = preg_replace('/\s*```$/', '', $cleaned);
-
-        $data = json_decode($cleaned, true);
-
-        if (! is_array($data)) {
-            throw new \RuntimeException('Failed to parse DungeonMaster response: '.$raw);
-        }
-
-        return $data;
     }
 }

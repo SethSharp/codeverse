@@ -2,6 +2,7 @@
 
 namespace App\Ai\Agents;
 
+use App\Ai\Concerns\ParsesJsonResponse;
 use App\Models\GameSession;
 use Laravel\Ai\Concerns\RemembersConversations;
 use Laravel\Ai\Contracts\Agent;
@@ -11,7 +12,7 @@ use Stringable;
 
 class DungeonMaster implements Agent, Conversational
 {
-    use Promptable, RemembersConversations;
+    use ParsesJsonResponse, Promptable, RemembersConversations;
 
     public function __construct(
         public GameSession $gameSession,
