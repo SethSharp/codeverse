@@ -45,8 +45,9 @@ const startGame = async () => {
 <template>
     <div class="flex w-full max-w-2xl flex-col items-center gap-8 text-center">
         <!-- Logo / Title -->
-        <div class="space-y-2">
-            <div class="text-sm font-medium tracking-[0.3em] text-indigo-400 uppercase">Coding Labs presents</div>
+        <div class="space-y-4">
+            <img src="/svg/codinglabs-logo.svg" alt="Coding Labs" class="mx-auto h-8 opacity-60" />
+            <div class="text-sm font-medium tracking-[0.3em] text-indigo-400 uppercase">presents</div>
             <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">
                 Lost in the
                 <span class="bg-gradient-to-r from-indigo-400 to-orange-400 bg-clip-text text-transparent">Codeverse</span>
