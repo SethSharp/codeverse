@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@codinglabsau/gooey';
-
 interface InventoryItem {
     name: string;
     description: string;
@@ -55,18 +53,14 @@ defineProps<{
         <!-- Inventory -->
         <div v-if="inventory.length > 0" class="flex items-center gap-2">
             <span class="text-zinc-500">INV</span>
-            <TooltipProvider v-for="(item, i) in inventory" :key="i">
-                <Tooltip>
-                    <TooltipTrigger as-child>
-                        <span class="cursor-default rounded bg-zinc-800 px-1.5 py-0.5 text-orange-400">
-                            {{ item.name }}
-                        </span>
-                    </TooltipTrigger>
-                    <TooltipContent v-if="item.description">
-                        {{ item.description }}
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+            <span
+                v-for="(item, i) in inventory"
+                :key="i"
+                :title="item.description"
+                class="cursor-default rounded bg-zinc-800 px-1.5 py-0.5 text-orange-400"
+            >
+                {{ item.name }}
+            </span>
         </div>
     </div>
 </template>
