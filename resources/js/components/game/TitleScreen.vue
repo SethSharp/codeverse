@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import axios from 'axios';
 import { Button, Input } from '@codinglabsau/gooey';
+import StartGameController from '@/actions/App/Http/Controllers/Game/StartGameController';
+import { useLoadingDots } from '@/composables/useLoadingDots';
 
 const emit = defineEmits<{
     start: [data: Record<string, unknown>];
@@ -9,6 +12,7 @@ const emit = defineEmits<{
 const playerName = ref('');
 const loading = ref(false);
 const error = ref('');
+const loadingText = useLoadingDots(loading, 'INITIALISING');
 
 const startGame = async () => {
     if (!playerName.value.trim()) {
@@ -20,20 +24,10 @@ const startGame = async () => {
     error.value = '';
 
     try {
-        const response = await fetch('/game/start', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
-            },
-            body: JSON.stringify({ player_name: playerName.value.trim() }),
+        const { data } = await axios.post(StartGameController.url(), {
+            player_name: playerName.value.trim(),
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to start game');
-        }
-
-        const data = await response.json();
         emit('start', data);
     } catch {
         error.value = 'System malfunction. Try again.';
@@ -84,7 +78,7 @@ const startGame = async () => {
                     :disabled="loading"
                     @click="startGame"
                 >
-                    {{ loading ? 'INITIALISING...' : 'LAUNCH MISSION' }}
+                    {{ loading ? loadingText : 'LAUNCH MISSION' }}
                 </Button>
             </div>
 
