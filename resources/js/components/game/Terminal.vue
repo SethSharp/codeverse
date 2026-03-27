@@ -3,9 +3,9 @@ import { nextTick, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
 import { Button, Input } from '@codinglabsau/gooey';
-import ActionController from '@/actions/App/Http/Controllers/Game/ActionController';
-import AiAssistController from '@/actions/App/Http/Controllers/Game/AiAssistController';
-import IndexController from '@/actions/App/Http/Controllers/Game/IndexController';
+import StoreActionController from '@/actions/App/Http/Controllers/Game/StoreActionController';
+import AskAiQuestionController from '@/actions/App/Http/Controllers/Game/AskAiQuestionController';
+import IndexGameController from '@/actions/App/Http/Controllers/Game/IndexGameController';
 import StatsBar from '@/components/game/StatsBar.vue';
 import TypeWriter from '@/components/game/TypeWriter.vue';
 import { useLoadingDots } from '@/composables/useLoadingDots';
@@ -52,7 +52,7 @@ const sendAction = async (body: Record<string, string>) => {
     codeAnswer.value = '';
 
     try {
-        const { data } = await axios.post(ActionController.url(props.gameSessionId), body);
+        const { data } = await axios.post(StoreActionController.url(props.gameSessionId), body);
         state.value = data;
 
         await nextTick();
@@ -81,7 +81,7 @@ const askAi = async () => {
     aiUsesRemaining.value--;
 
     try {
-        const { data } = await axios.post(AiAssistController.url(props.gameSessionId), {
+        const { data } = await axios.post(AskAiQuestionController.url(props.gameSessionId), {
             narrative: state.value!.narrative,
             hint: state.value!.hint,
         });
@@ -221,7 +221,7 @@ defineExpose({ setInitialState });
                             <div class="text-2xl font-bold text-red-400">SYSTEM CRASH</div>
                             <div class="text-sm text-zinc-400">The station has gone dark. The Codeverse is lost.</div>
                         </div>
-                        <Button class="mt-4 bg-indigo-600 font-mono text-sm text-white hover:bg-indigo-500" @click="router.visit(IndexController.url())">
+                        <Button class="mt-4 bg-indigo-600 font-mono text-sm text-white hover:bg-indigo-500" @click="router.visit(IndexGameController.url())">
                             RESTART
                         </Button>
                     </div>

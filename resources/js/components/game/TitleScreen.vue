@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { Button, Input } from '@codinglabsau/gooey';
-import StartController from '@/actions/App/Http/Controllers/Game/StartController';
+import StartGameController from '@/actions/App/Http/Controllers/Game/StartGameController';
 import { useLoadingDots } from '@/composables/useLoadingDots';
 
 const emit = defineEmits<{
@@ -24,7 +24,7 @@ const startGame = async () => {
     error.value = '';
 
     try {
-        const { data } = await axios.post(StartController.url(), {
+        const { data } = await axios.post(StartGameController.url(), {
             player_name: playerName.value.trim(),
         });
 
