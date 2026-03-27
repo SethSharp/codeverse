@@ -1,33 +1,23 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
+import { ref } from 'vue';
 import StarField from '@/components/game/StarField.vue';
-import Terminal from '@/components/game/Terminal.vue';
+import HomeMenu from '@/components/game/HomeMenu.vue';
 import TitleScreen from '@/components/game/TitleScreen.vue';
 
-interface GameResponse {
-    game_session_id: number;
-    narrative: string;
-    choices: { key: string; text: string }[];
+interface LatestSession {
+    id: number;
+    player_name: string;
     health: number;
     energy: number;
-    inventory: string[];
-    encounter: number;
-    encounter_title: string;
+    current_encounter: number;
     game_over: boolean;
-    victory: boolean;
 }
 
-const gameStarted = ref(false);
-const initialData = ref<GameResponse | null>(null);
-const terminal = ref<InstanceType<typeof Terminal>>();
+defineProps<{
+    latestSession: LatestSession | null;
+}>();
 
-const onGameStart = async (data: GameResponse) => {
-    initialData.value = data;
-    gameStarted.value = true;
-
-    await nextTick();
-    terminal.value?.setInitialState(data);
-};
+const showNewGame = ref(false);
 </script>
 
 <template>
@@ -35,8 +25,8 @@ const onGameStart = async (data: GameResponse) => {
         <StarField />
 
         <div class="relative z-10 flex min-h-screen items-center justify-center p-4">
-            <TitleScreen v-if="!gameStarted" @start="onGameStart" />
-            <Terminal v-else ref="terminal" :game-session-id="initialData!.game_session_id" />
+            <HomeMenu v-if="!showNewGame" :latest-session="latestSession" @new-game="showNewGame = true" />
+            <TitleScreen v-else />
         </div>
     </div>
 </template>

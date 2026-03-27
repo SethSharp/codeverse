@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
+import { router } from '@inertiajs/vue3';
 import { Button, Input } from '@codinglabsau/gooey';
-import StartGameController from '@/actions/App/Http/Controllers/Game/StartGameController';
-import { useLoadingDots } from '@/composables/useLoadingDots';
-
-const emit = defineEmits<{
-    start: [data: Record<string, unknown>];
-}>();
+import StoreGameSessionController from '@/actions/App/Http/Controllers/Game/StoreGameSessionController';
+import ShowGameController from '@/actions/App/Http/Controllers/Game/ShowGameController';
 
 const playerName = ref('');
 const loading = ref(false);
 const error = ref('');
-const loadingText = useLoadingDots(loading, 'INITIALISING');
 
 const startGame = async () => {
     if (!playerName.value.trim()) {
@@ -24,11 +20,11 @@ const startGame = async () => {
     error.value = '';
 
     try {
-        const { data } = await axios.post(StartGameController.url(), {
+        const { data } = await axios.post(StoreGameSessionController.url(), {
             player_name: playerName.value.trim(),
         });
 
-        emit('start', data);
+        router.visit(ShowGameController.url(data.game_session_id));
     } catch {
         error.value = 'System malfunction. Try again.';
         loading.value = false;
@@ -78,7 +74,7 @@ const startGame = async () => {
                     :disabled="loading"
                     @click="startGame"
                 >
-                    {{ loading ? loadingText : 'LAUNCH MISSION' }}
+                    {{ loading ? 'LAUNCHING...' : 'LAUNCH MISSION' }}
                 </Button>
             </div>
 

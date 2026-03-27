@@ -157,7 +157,7 @@ defineExpose({ setInitialState });
                                 v-for="choice in state.choices"
                                 :key="choice.key"
                                 variant="outline"
-                                class="w-full justify-start border-zinc-700 bg-zinc-900/50 px-4 py-3 text-left font-mono text-sm text-zinc-300 transition-all hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
+                                class="w-full justify-start border-zinc-700 bg-zinc-900/50 px-4 py-5 text-left font-mono text-sm text-zinc-300 transition-all hover:border-indigo-500 hover:bg-indigo-500/10 hover:text-white"
                                 @click="makeChoice(choice.key)"
                             >
                                 <span class="mr-3 font-bold text-indigo-400">[{{ choice.key }}]</span>

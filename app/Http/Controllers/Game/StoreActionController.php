@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Game;
 
 use App\Ai\Agents\DungeonMaster;
+use App\Ai\Concerns\ParsesJsonResponse;
 use App\Http\Controllers\Controller;
 use App\Models\GameSession;
 use Illuminate\Http\JsonResponse;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 
 class StoreActionController extends Controller
 {
+    use ParsesJsonResponse;
+
     public function __invoke(Request $request, GameSession $gameSession): JsonResponse
     {
         $request->validate([
@@ -31,7 +34,7 @@ class StoreActionController extends Controller
             ->continue($gameSession->conversation_id, as: $gameSession)
             ->prompt($prompt);
 
-        $data = DungeonMaster::parseResponse((string) $response);
+        $data = self::parseResponse((string) $response);
 
         $gameSession->update([
             'health' => $data['health'],
