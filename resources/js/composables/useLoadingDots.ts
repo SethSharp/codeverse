@@ -27,13 +27,21 @@ export const useLoadingDots = (loading: Ref<boolean>, base?: string, interval = 
 
     const text = computed(() => (loading.value ? currentVerb.value + '.'.repeat(dotCount.value) : ''));
 
+    const start = () => {
+        currentVerb.value = base ?? randomVerb();
+        dotCount.value = 1;
+        timer = setInterval(() => {
+            dotCount.value = (dotCount.value % 3) + 1;
+        }, interval);
+    };
+
+    if (loading.value) {
+        start();
+    }
+
     watch(loading, (isLoading) => {
         if (isLoading) {
-            currentVerb.value = base ?? randomVerb();
-            dotCount.value = 1;
-            timer = setInterval(() => {
-                dotCount.value = (dotCount.value % 3) + 1;
-            }, interval);
+            start();
         } else {
             clearInterval(timer);
         }
